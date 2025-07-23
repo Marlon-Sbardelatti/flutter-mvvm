@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mvvm/constants/my_app_theme.dart';
 import 'package:mvvm/screens/movies_screen.dart';
 import 'package:mvvm/services/init_getit.dart';
 import 'package:mvvm/services/navigation_service.dart';
 
-void main() {
+void main() async {
   setupLocator();
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) async {
+    await dotenv.load(fileName: 'assets/.env');
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
