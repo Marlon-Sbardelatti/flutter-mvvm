@@ -7,6 +7,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: MyErrorWidget(errorText: 'errorText', retryFunction: () {}));
+      body: MyErrorWidget(errorText: "errorText", retryFunction: () {}),
+    );
   }
 }

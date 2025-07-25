@@ -1,10 +1,10 @@
-import 'package:mvvm/models/movies_genre.dart';
-import 'package:mvvm/models/movies_model.dart';
-import 'package:mvvm/services/api_service.dart';
+import 'package:mvvm/service/api_service.dart';
+
+import '../models/movies_genre.dart';
+import '../models/movies_model.dart';
 
 class MoviesRepository {
   final ApiService _apiService;
-
   MoviesRepository(this._apiService);
 
   Future<List<MovieModel>> fetchMovies({int page = 1}) async {

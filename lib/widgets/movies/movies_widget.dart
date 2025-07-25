@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm/constants/my_app_constants.dart';
 import 'package:mvvm/constants/my_app_icons.dart';
-import 'package:mvvm/screens/movie_details_screen.dart';
-import 'package:mvvm/services/init_getit.dart';
-import 'package:mvvm/services/navigation_service.dart';
-import 'package:mvvm/widgets/cached_image.dart';
-import 'package:mvvm/widgets/movies/favorite_btn.dart';
-import 'package:mvvm/widgets/movies/genres_list_widget.dart';
+import 'package:mvvm/screens/movie_details.dart';
+import '../../models/movies_model.dart';
+import '../../service/init_getit.dart';
+import '../../service/navigation_service.dart';
+import '../cached_image.dart';
+import 'favorite_btn.dart';
+import 'genres_list_widget.dart';
 
 class MoviesWidget extends StatelessWidget {
-  const MoviesWidget({super.key});
+  const MoviesWidget({super.key, required this.movieModel});
+
+  final MovieModel movieModel;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,7 +22,8 @@ class MoviesWidget extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12.0),
           onTap: () {
-            getIt<NavigationService>().navigate(const MovieDetailsScreen());
+            getIt<NavigationService>()
+                .navigate(MovieDetailsScreen(movieModel: movieModel));
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -29,10 +32,14 @@ class MoviesWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: const CachedImageWidget(
-                      imgUrl: MyAppConstants.movieImage,
+                  Hero(
+                    tag: movieModel.id,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: CachedImageWidget(
+                        imgUrl:
+                            "https://image.tmdb.org/t/p/w500/${movieModel.posterPath}",
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -40,13 +47,13 @@ class MoviesWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Movie Title",
-                          style: TextStyle(
+                        Text(
+                          movieModel.originalTitle,
+                          style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
-                        const Row(
+                        Row(
                           children: [
                             Icon(
                               Icons.star,
@@ -54,11 +61,11 @@ class MoviesWidget extends StatelessWidget {
                               size: 20,
                             ),
                             SizedBox(width: 5),
-                            Text("8/10"),
+                            Text("${movieModel.voteAverage}/10"),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        GenresListWidget(),
+                        const GenresListWidget(),
                         Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,8 +76,8 @@ class MoviesWidget extends StatelessWidget {
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                             const SizedBox(width: 5),
-                            const Text(
-                              "Release Date",
+                            Text(
+                              movieModel.releaseDate,
                               style: TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),
